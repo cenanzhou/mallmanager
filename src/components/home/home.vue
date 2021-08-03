@@ -13,7 +13,9 @@
         </el-col>
         <el-col :span="2">
           <div class="grid-content bg-purple">
-            <a class="loginout" @click.prevent="handleSignout()" href="#">退出</a>
+            <a class="loginout" @click.prevent="handleSignout()" href="#"
+              >退出</a
+            >
           </div>
         </el-col>
       </el-row>
@@ -96,28 +98,28 @@
   </el-container>
 </template>
 <script>
-export default {  
+export default {
   // new Vue之前自动触发
   beforeCreate() {
     // 获取token
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("token");
     if (!token) {
       // token 没有 ->登录
-      this.$router.push({ name: "login" })
+      this.$router.push({ name: "login" });
     }
     // if token 有 ->继续渲染组件
   },
-  methods:{
-    handleSignout(){
+  methods: {
+    handleSignout() {
       // 1、清除token
-      localStorage.clear()
+      localStorage.clear();
       // 2、提示
-      this.$message.success('退出成功')
+      this.$message.success("退出成功");
       // 3、来到login组件
-      this.$router.push ({ name: 'login' })
-    }
-  }
-}
+      this.$router.push({ name: "login" });
+    },
+  },
+};
 </script>
 <style scoped>
 .container {
