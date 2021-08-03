@@ -13,7 +13,7 @@
         </el-col>
         <el-col :span="2">
           <div class="grid-content bg-purple">
-            <a class="loginout" href="#">退出</a>
+            <a class="loginout" @click.prevent="handleSignout()" href="#">退出</a>
           </div>
         </el-col>
       </el-row>
@@ -107,7 +107,17 @@ export default {
     }
     // if token 有 ->继续渲染组件
   },
-};
+  methods:{
+    handleSignout(){
+      // 1、清除token
+      localStorage.clear()
+      // 2、提示
+      this.$message.success('退出成功')
+      // 3、来到login组件
+      this.$router.push ({ name: 'login' })
+    }
+  }
+}
 </script>
 <style scoped>
 .container {
