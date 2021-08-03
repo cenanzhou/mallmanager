@@ -24,8 +24,8 @@ export default {
   data () {
     return {
       formdata: {
-        username: "",
-        password: "",
+        username: '',
+        password: ''
       }
     }
   },
@@ -34,7 +34,7 @@ export default {
     async handlelogin () {
       // 让异步操作的代码 看起来像同步代码
       // ES7 async+await
-      const res = await this.$http.post("login", this.formdata)
+      const res = await this.$http.post('login', this.formdata)
       // 对象解构赋值
       console.log(res)
       const {
@@ -47,7 +47,7 @@ export default {
         // 0、保存token
         localStorage.setItem('token', data.token)
         // 1、跳转home
-        this.$router.push({ name: "home" })
+        this.$router.push({ name: 'home' })
         // 2、提示成功
         this.$message.success(msg)
       } else {

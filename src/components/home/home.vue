@@ -102,25 +102,25 @@
 <script>
 export default {
   // new Vue之前自动触发
-  beforeCreate() {
+  beforeCreate () {
     // 获取token
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem('token')
     if (!token) {
       // token 没有 ->登录
-      this.$router.push({ name: "login" })
+      this.$router.push({ name: 'login' })
     }
     // if token 有 ->继续渲染组件
   },
   methods: {
-    handleSignout() {
+    handleSignout () {
       // 1、清除token
       localStorage.clear()
       // 2、提示
-      this.$message.success("退出成功")
+      this.$message.success('退出成功')
       // 3、来到login组件
-      this.$router.push({ name: "login" })
-    },
-  },
+      this.$router.push({ name: 'login' })
+    }
+  }
 }
 </script>
 <style scoped>
