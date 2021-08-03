@@ -13,9 +13,7 @@
         </el-col>
         <el-col :span="2">
           <div class="grid-content bg-purple">
-            <a class="loginout" @click.prevent="handleSignout()" href="#"
-              >退出</a
-            >
+            <a class="loginout" @click.prevent="handleSignout()" href="#">退出</a>
           </div>
         </el-col>
       </el-row>
@@ -23,14 +21,16 @@
     <el-container>
       <el-aside class="aside" width="200px">
         <!-- 侧边栏导航 -->
-        <el-menu :unique-opened="true">
+        <el-menu
+        :router="true"
+        :unique-opened="true">
           <!-- 1 -->
           <el-submenu index="1">
             <template slot="title">
               <i class="el-icon-location"></i>
               <span>用户管理</span>
             </template>
-            <el-menu-item index="1-1">
+            <el-menu-item index="users">
               <i class="el-icon-menu"></i>
               <span>用户列表</span>
             </el-menu-item>
@@ -93,7 +93,9 @@
           </el-submenu>
         </el-menu>
       </el-aside>
-      <el-main class="main">Main</el-main>
+      <el-main class="main">
+        <router-view></router-view>
+      </el-main>
     </el-container>
   </el-container>
 </template>
@@ -102,24 +104,24 @@ export default {
   // new Vue之前自动触发
   beforeCreate() {
     // 获取token
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token")
     if (!token) {
       // token 没有 ->登录
-      this.$router.push({ name: "login" });
+      this.$router.push({ name: "login" })
     }
     // if token 有 ->继续渲染组件
   },
   methods: {
     handleSignout() {
       // 1、清除token
-      localStorage.clear();
+      localStorage.clear()
       // 2、提示
-      this.$message.success("退出成功");
+      this.$message.success("退出成功")
       // 3、来到login组件
-      this.$router.push({ name: "login" });
+      this.$router.push({ name: "login" })
     },
   },
-};
+}
 </script>
 <style scoped>
 .container {
