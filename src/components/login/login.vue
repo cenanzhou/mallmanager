@@ -21,38 +21,41 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
       formdata: {
         username: "",
         password: "",
-      },
-    };
+      }
+    }
   },
   methods: {
     // 登录请求
-    async handlelogin() {
+    async handlelogin () {
       // 让异步操作的代码 看起来像同步代码
       // ES7 async+await
       const res = await this.$http.post("login", this.formdata)
-        // 对象解构赋值
-        const {
-          data,
-          meta: { msg, status },
-        } = res.data;
+      // 对象解构赋值
+      console.log(res)
+      const {
+        data,
+        meta: { msg, status }
+      } = res.data
 
-        if (status === 200) {
-          // 登录成功
-          // 1、跳转home
-          this.$router.push({ name: "home" });
-          // 2、提示成功
-          this.$message.success(msg);
-        } else {
-          // 不成功
-          // 提示信息
-          this.$message.warning(msg);
-        }
-    },
+      if (status === 200) {
+        // 登录成功
+        // 0、保存token
+        localStorage.setItem('token', data.token)
+        // 1、跳转home
+        this.$router.push({ name: "home" })
+        // 2、提示成功
+        this.$message.success(msg)
+      } else {
+        // 不成功
+        // 提示信息
+        this.$message.warning(msg)
+      }
+    }
 
     // handlelogin () {
     //   // 让异步操作的代码 看起来像同步代码
@@ -77,8 +80,8 @@ export default {
     //       }
     //     })
     // }
-  },
-};
+  }
+}
 </script>
 <style scoped>
 .login-wrap {
