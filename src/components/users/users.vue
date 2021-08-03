@@ -12,8 +12,10 @@
     <!-- 2、搜索 -->
     <el-row class="searchRow">
       <el-col>
-        <el-input placeholder="请输入内容" v-model="query" class="inputSearen">
-          <el-button slot="append" icon="el-icon-search"></el-button>
+        <el-input
+        @clear="loadUserList()"
+        clearable placeholder="请输入内容" v-model="query" class="inputSearen">
+          <el-button @click="searchUser()" slot="append" icon="el-icon-search"></el-button>
         </el-input>
         <el-button type="success">添加用户</el-button>
       </el-col>
@@ -107,6 +109,15 @@ export default {
     this.getUserList()
   },
   methods: {
+    // 清空搜索框，重新获取数据
+    loadUserList () {
+      this.getUserList()
+    },
+    // 搜索用户
+    searchUser () {
+      // 按照input绑定的query
+      this.getUserList()
+    },
     // 分页相关的方法
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`)
