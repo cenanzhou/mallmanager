@@ -21,8 +21,7 @@
     <el-container>
       <el-aside class="aside" width="200px">
         <!-- 侧边栏导航 -->
-        <el-menu
-          :unique-opened="true">
+        <el-menu :unique-opened="true">
           <!-- 1 -->
           <el-submenu index="1">
             <template slot="title">
@@ -97,7 +96,18 @@
   </el-container>
 </template>
 <script>
-export default {};
+export default {  
+  // new Vue之前自动触发
+  beforeCreate() {
+    // 获取token
+    const token = localStorage.getItem("token")
+    if (!token) {
+      // token 没有 ->登录
+      this.$router.push({ name: "login" })
+    }
+    // if token 有 ->继续渲染组件
+  },
+};
 </script>
 <style scoped>
 .container {
