@@ -53,6 +53,7 @@
         <!--template  slot-scope -->
         <template slot-scope="scope">
           <el-switch
+          @change="changeMgState(scope.row)"
             v-model="scope.row.mg_state"
             active-color="#13ce66"
             inactive-color="#ff4949"
@@ -74,17 +75,18 @@
           <el-button
             size="mini"
             plain
-            type="success"
-            icon="el-icon-check"
-            circle
-          ></el-button>
-          <el-button
-            size="mini"
-            plain
             type="danger"
             icon="el-icon-delete"
             circle
             @click="showDeleUserMsgBox(scope.row.id)"
+          ></el-button>
+          <el-button
+          @click="showSetUserRoleDia(scope.row)"
+            size="mini"
+            plain
+            type="success"
+            icon="el-icon-check"
+            circle
           ></el-button>
         </template>
       </el-table-column>
@@ -140,9 +142,35 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisibleEdit = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisibleEdit = false">确 定</el-button>
+        <el-button type="primary" @click="editUser()">确 定</el-button>
       </div>
     </el-dialog>
+
+    <!-- 分配角色的对话框 -->
+    <el-dialog title="分配角色" :visible.sync="dialogFormVisibleRol">
+  <el-form :model="form">
+    <el-form-item label="用户名" label-width="100px">
+      {{currUsername}}
+    </el-form-item>
+    <el-form-item label="角色" label-width="100px">
+
+      <!-- 如果select绑定的数据的值 和 option 的value一样，
+      就会显示该option的label值 -->
+      <el-select v-model="currRoleId">
+        <el-option label="请选择" :value="-1"></el-option>
+        <el-option :label="item.roleName" :value="item.id"
+        v-for="(item,i) in roles" :key="i">
+
+        </el-option>
+      </el-select>
+    </el-form-item>
+  </el-form>
+  <div slot="footer" class="dialog-footer">
+    <el-button @click="dialogFormVisibleRol = false">取 消</el-button>
+    <el-button type="primary" @click="setRole()">确 定</el-button>
+  </div>
+</el-dialog>
+
   </el-card>
 </template>
 <script>
@@ -159,19 +187,74 @@ export default {
       // 添加对话的属性
       dialogFormVisibleAdd: false,
       dialogFormVisibleEdit: false,
+      dialogFormVisibleRol: false,
       // 添加对话的属性
       form: {
         username: '',
         password: '',
         email: '',
         mobile: ''
-      }
+      },
+      // 分配角色
+      currRoleId: -1,
+      currUserId: -1,
+      currUsername: '',
+      // 保存所有的角色数据
+      roles: []
     }
   },
   created () {
     this.getUserList()
   },
   methods: {
+    // 分配角色-发送请求
+    async setRole () {
+      // :id 要修改的用户的id的值
+      // 请求体中rid
+      const res = await this.$http.put(`users/${this.currUserId}/role`, {
+        rid: this.currRoleId
+      })
+      console.log(res)
+      // 关闭对话框
+      this.dialogFormVisibleRol = false
+    },
+    // 分配角色,打开对话框
+    async showSetUserRoleDia (user) {
+      this.currUsername = user.username
+      // 给curruserId赋值
+      this.currUserId = user.id
+      // 获取所有的角色
+      const res1 = await this.$http.get(`roles`)
+      // console.log(res1)
+      this.roles = res1.data.data
+      // 获取当前用户角色的id
+      const res = await this.$http.get(`users/${user.id}`)
+      // 接口文档的key名 是role_id 其实就是rid
+      this.currRoleId = res.data.data.rid
+      // console.log(res)
+      // 获取当前用户的角色id
+      this.dialogFormVisibleRol = true
+    },
+    // 修改状态
+    async changeMgState (user) {
+      // 发送请求
+      // user
+      const res = await this.$http.put(
+        // 1、mg_state = false
+        // 2、点开关 -> mg_state
+        `users/${user.id}/state/${user.mg_state}`)
+      console.log(res)
+    },
+    // 编辑用户-发送请求
+    async editUser () {
+      // users/:id
+      const res = await this.$http.put(`users/${this.form.id}`, this.form)
+      console.log(res)
+      // 1、关闭对话框
+      this.dialogFormVisibleEdit = false
+      // 2、更新视图
+      this.getUserList()
+    },
     // 编辑用户 - 显示对话框
     showEditUserDia (user) {
       this.form = user
@@ -231,6 +314,8 @@ export default {
     },
     // 添加用户
     showAddUserDia () {
+      // 先点编辑 再点添加-->打开添加用户之间清空数据
+      this.form = {}
       this.dialogFormVisibleAdd = true
     },
     // 清空搜索框，重新获取数据
