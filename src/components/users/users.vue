@@ -69,7 +69,7 @@
             type="primary"
             icon="el-icon-edit"
             circle
-            @click="showEditUserDia()"
+            @click="showEditUserDia(scope.row)"
           ></el-button>
           <el-button
             size="mini"
@@ -129,7 +129,7 @@
     <el-dialog title="编辑用户" :visible.sync="dialogFormVisibleEdit">
       <el-form :model="form">
         <el-form-item label="用户名" label-width="100px">
-          <el-input v-model="form.username" autocomplete="off"></el-input>
+          <el-input disabled v-model="form.username" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" label-width="100px">
           <el-input v-model="form.email" autocomplete="off"></el-input>
@@ -173,7 +173,9 @@ export default {
   },
   methods: {
     // 编辑用户 - 显示对话框
-    showEditUserDia () {
+    showEditUserDia (user) {
+      this.form = user
+      // 获取用户信息
       this.dialogFormVisibleEdit = true
     },
     // 删除用户 - 打开消息盒子(config)
